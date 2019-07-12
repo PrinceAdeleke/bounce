@@ -29,7 +29,7 @@ public class GPSLocationService {
                 return gpsLocationRepository.save(gpsLocation);
             }
         }
-//
+
         return gpsLocationRepository.save(gpsLocation);
     }
 
@@ -50,7 +50,7 @@ public class GPSLocationService {
         double longitude2 = gpsLocation2.getLongitude();
 
         final int R = 6371; // Radius of the earth
-//
+
         double latDistance = Math.toRadians(latitude2 - latitude1);
         double lonDistance = Math.toRadians(longitude2 - longitude1);
         double a = Math.sin(latDistance / 2) * Math.sin(latDistance / 2)
