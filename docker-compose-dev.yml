@@ -1,0 +1,28 @@
+version: '3.7'
+services:
+  app:
+    working_dir: /app
+    build:
+      dockerfile: Dockerfile-dev
+      context: .
+    volumes:
+      - ./:/app
+    command: ./gradlew bootRun
+    ports:
+      - 8080:8080
+    restart: on-failure
+    networks:
+      - findmycar
+
+  mysqldb:
+    image: mysql:5.7
+    restart: on-failure
+    environment:
+      MYSQL_ALLOW_EMPTY_PASSWORD: 'true'
+    ports:
+      - 3306:3306
+    networks:
+      - findmycar
+
+networks:
+  findmycar:
