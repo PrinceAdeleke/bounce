@@ -24,6 +24,11 @@ public abstract class APIResponse {
         this.data = data;
     }
 
+    public APIResponse(boolean success, Object data) {
+        this.success = success;
+        this.data = data;
+    }
+
     public APIResponse(boolean success) {
         this.success = success;
     }

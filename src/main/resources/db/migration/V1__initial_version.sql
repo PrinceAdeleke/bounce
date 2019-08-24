@@ -1,17 +1,26 @@
-CREATE TABLE gps_location (
+CREATE TABLE transmitter (
   id BIGINT AUTO_INCREMENT,
-  user_id INT,
+  model VARCHAR(255),
+  created TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (id)
+);
 
+CREATE TABLE user (
+  id BIGINT AUTO_INCREMENT,
+  enabled BOOLEAN,
+  transmitter_id BIGINT,
+  created TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  FOREIGN KEY (transmitter_id) REFERENCES transmitter (id),
+  PRIMARY KEY (id)
+);
+
+CREATE TABLE location (
+  id BIGINT AUTO_INCREMENT,
   latitude DOUBLE,
   longitude DOUBLE,
-
-  device_id VARCHAR(255),
-  model VARCHAR(255),
-  battery_level VARCHAR(10),
-  ip_address VARCHAR(255),
-  gps_timestamp DATETIME,
-
+  user_id BIGINT,
+  gps_timestamp TIMESTAMP NOT NULL,
   created TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-
-  PRIMARY KEY(id)
-)
+  PRIMARY KEY (id),
+  FOREIGN KEY (user_id) REFERENCES user (id)
+);
