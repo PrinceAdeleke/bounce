@@ -1,42 +1,49 @@
 package com.findmycar.bounce.service;
 
-import com.findmycar.bounce.domain.location.Location;
+import com.findmycar.bounce.dto.CreateLocationRequest;
+import com.findmycar.bounce.entity.Location;
+import com.findmycar.bounce.entity.Transmitter;
+import com.findmycar.bounce.entity.User;
 import com.findmycar.bounce.repository.LocationRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.Optional;
-//
+import java.time.LocalDateTime;
+import java.util.List;
+import java.util.stream.Collectors;
+
 @Service
 public class LocationService {
     private final LocationRepository locationRepository;
-    private static final int MAX_DISTANCE_BETWEEN = 20;
+    private final TransmitterService transmitterService;
 
     @Autowired
-    public LocationService(LocationRepository locationRepository) {
+    public LocationService(LocationRepository locationRepository, TransmitterService transmitterService) {
         this.locationRepository = locationRepository;
+        this.transmitterService = transmitterService;
     }
 
-    public Optional<Location> getLocationById(Long id) {
-        return locationRepository.findById(id);
-    }
+    /**
+     * @param user id of the user transmitting the location(s)
+     * @param transmitterId id of the transmitter
+     * @param locations location request objects
+     * @return list of saved gps locations
+     */
+    public List<Location> addNewLocation(User user, Long transmitterId, List<CreateLocationRequest.Location> locations) {
+        Transmitter transmitter = transmitterService.findTransmitterById(transmitterId);
 
-    public Location addNewLocation(Location location) {
+        List<Location> newLocations = locations.stream()
+                .map(location -> Location.builder()
+                        .transmitter(transmitter)
+                        .user(user)
+                        .longitude(location.getLongitude())
+                        .latitude(location.getLatitude())
+                        .gpsTimestamp(location.getGpsTimestamp())
+                        .created(LocalDateTime.now())
+                        .build()
+                ).collect(Collectors.toList());
 
-        System.out.println(location);
-//        Optional<Location> lastGpsLocation = new L
-//
-//        if (lastGpsLocation.isPresent()) {
-//            // Calculate distance between last saved location and new location
-//            double distanceBetween = distanceBetween(location, lastGpsLocation.get());
-//            if (distanceBetween <= MAX_DISTANCE_BETWEEN) {
-//
-//                // TODO - SAVE PREVIOUS LOCATION WITH UPDATED STATE (E.G., BATTERY LEVEL, IP ADDRESS AND GPS TIMESTAMP ETC)
-//                return locationRepository.save(location);
-//            }
-//        }
-
-        return locationRepository.save(location);
+        return locationRepository.saveAll(newLocations);
     }
 
     /** TODO - MOVE TO UTILITY METHOD / INTERFACE

@@ -1,7 +1,9 @@
 package com.findmycar.bounce.controller;
 
-import com.findmycar.bounce.domain.response.FailureResponse;
-import com.findmycar.bounce.domain.response.ValidationErrors;
+import com.findmycar.bounce.entity.response.APIResponse;
+import com.findmycar.bounce.entity.response.ValidationErrors;
+import com.findmycar.bounce.exception.APIException;
+import com.findmycar.bounce.exception.BadRequestException;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -19,23 +21,22 @@ import javax.validation.ConstraintViolationException;
 public class RestExceptionHandler extends ResponseEntityExceptionHandler {
 
     @ExceptionHandler(ConstraintViolationException.class)
-    public ResponseEntity<ValidationErrors> handleConstraintViolation(ConstraintViolationException exception) {
-        return new ResponseEntity<>(
-                new ValidationErrors(exception.getConstraintViolations()),
-                HttpStatus.UNPROCESSABLE_ENTITY
-        );
+    public APIResponse handleConstraintViolation(ConstraintViolationException exception) {
+        return new ValidationErrors(exception.getConstraintViolations());
     }
 
     @ExceptionHandler(EntityNotFoundException.class)
-    public ResponseEntity<FailureResponse> handleEntityNotFoundException(EntityNotFoundException exception) {
-        return new ResponseEntity<>(
-                new FailureResponse(exception.getMessage(), null, HttpStatus.NOT_FOUND),
-                HttpStatus.NOT_FOUND
-        );
+    public APIResponse handleEntityNotFoundException(EntityNotFoundException exception) {
+        return new APIResponse(exception.getMessage(), HttpStatus.NOT_FOUND);
     }
 
-    @Override
-    protected ResponseEntity<Object> handleHttpMessageNotReadable(HttpMessageNotReadableException exception, HttpHeaders headers, HttpStatus status, WebRequest request) {
-        return new ResponseEntity<>(new FailureResponse(exception.getMessage(), null, status), status);
+    @ExceptionHandler(BadRequestException.class)
+    public APIResponse handleAPIException(APIException exception) {
+        return new APIResponse(exception.getMessage(), exception.getStatus());
     }
+//
+//    @Override
+//    protected ResponseEntity<Object> handleHttpMessageNotReadable(HttpMessageNotReadableException exception, HttpHeaders headers, HttpStatus status, WebRequest request) {
+//        return new ResponseEntity<>(new FailureResponse(exception.getMessage(), null, status), status);
+//    }
 }

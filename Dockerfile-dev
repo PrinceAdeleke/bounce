@@ -1,4 +1,3 @@
 FROM openjdk:8
 COPY . /app
 WORKDIR /app
-CMD ./gradlew build --continuous

@@ -1,11 +1,17 @@
 spring:
   datasource:
-    url: jdbc:mysql://mysqldb:3306/findmycar?createDatabaseIfNotExist=true&useSSL=false
+    url: jdbc:postgresql://postgresdb:5432/findmycar
     username: root
+    password: root
 
   flyway:
     user: root
+    password: root
     locations: classpath:/db/migration
 
   jpa:
     show-sql: true
+    properties:
+      hibernate:
+        temp:
+          use_jdbc_metadata_defaults: false

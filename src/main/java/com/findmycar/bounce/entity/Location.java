@@ -1,17 +1,20 @@
-package com.findmycar.bounce.domain.location;
+package com.findmycar.bounce.entity;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.findmycar.bounce.domain.user.User;
-import lombok.Data;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 
 import javax.persistence.*;
-import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 
+@Builder(toBuilder = true)
+@NoArgsConstructor
+@AllArgsConstructor
 @Entity
-@Data
+@Getter
+@Setter
 public class Location {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -20,13 +23,16 @@ public class Location {
     @NotNull private Double longitude;
 
     @ManyToOne
-    @JoinColumn(name = "user_id", nullable = false)
-    @NotNull
-    @Valid
+    @JoinColumn(name = "transmitter_id", referencedColumnName = "id")
+    private Transmitter transmitter;
+
+    @JoinColumn(name = "user_id")
+    @OneToOne(cascade = CascadeType.ALL)
     private User user;
 
     @NotNull
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    @JsonProperty("gps_timestamp")
     private LocalDateTime gpsTimestamp;
 
     @CreationTimestamp private LocalDateTime created;

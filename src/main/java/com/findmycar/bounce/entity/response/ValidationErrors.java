@@ -1,18 +1,19 @@
-package com.findmycar.bounce.domain.response;
+package com.findmycar.bounce.entity.response;
 
 import lombok.Getter;
+import lombok.Setter;
 import org.springframework.http.HttpStatus;
 
 import javax.validation.ConstraintViolation;
 import java.util.*;
 import java.util.stream.Collectors;
 
-public class ValidationErrors extends FailureResponse {
+public class ValidationErrors extends APIResponse {
     @Getter
     private Map<String, List<ConstraintViolationError>> errors;
 
     public ValidationErrors(Set<ConstraintViolation<?>> constraintViolations) {
-        super(null, null, HttpStatus.UNPROCESSABLE_ENTITY);
+        super(null, HttpStatus.UNPROCESSABLE_ENTITY);
         errors = mapConstraintViolationsToErrors(constraintViolations);
     }
 

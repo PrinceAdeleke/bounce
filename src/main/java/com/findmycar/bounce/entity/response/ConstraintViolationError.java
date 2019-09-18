@@ -1,4 +1,4 @@
-package com.findmycar.bounce.domain.response;
+package com.findmycar.bounce.entity.response;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;

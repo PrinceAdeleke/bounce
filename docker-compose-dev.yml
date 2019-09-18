@@ -7,20 +7,22 @@ services:
       context: .
     volumes:
       - ./:/app
-    command: ./gradlew bootRun
+    command: bash -c './gradlew bootRun'
     ports:
       - 8080:8080
     restart: on-failure
     networks:
       - findmycar
 
-  mysqldb:
-    image: mysql:5.7
+  postgresdb:
+    image: postgres:12
     restart: on-failure
     environment:
-      MYSQL_ALLOW_EMPTY_PASSWORD: 'true'
+      POSTGRES_USER: root
+      POSTGRES_PASSWORD: root
+      POSTGRES_DB: findmycar
     ports:
-      - 3306:3306
+      - 5432:5432
     networks:
       - findmycar
 
