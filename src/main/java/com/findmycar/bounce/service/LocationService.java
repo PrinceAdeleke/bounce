@@ -1,49 +1,52 @@
 package com.findmycar.bounce.service;
 
-import com.findmycar.bounce.dto.CreateLocationRequest;
+import com.findmycar.bounce.entity.Account;
 import com.findmycar.bounce.entity.Location;
 import com.findmycar.bounce.entity.Transmitter;
-import com.findmycar.bounce.entity.User;
 import com.findmycar.bounce.repository.LocationRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 public class LocationService {
     private final LocationRepository locationRepository;
     private final TransmitterService transmitterService;
+    private final AccountService accountService;
 
     @Autowired
-    public LocationService(LocationRepository locationRepository, TransmitterService transmitterService) {
+    public LocationService(LocationRepository locationRepository,
+                           TransmitterService transmitterService,
+                           AccountService accountService) {
         this.locationRepository = locationRepository;
         this.transmitterService = transmitterService;
+        this.accountService = accountService;
     }
 
     /**
-     * @param user id of the user transmitting the location(s)
-     * @param transmitterId id of the transmitter
-     * @param locations location request objects
-     * @return list of saved gps locations
+     * Create new gps location
+     * @param accountId of user
+     * @param transmitterId of transmitting device
+     * @param location object
+     * @return new gps location
      */
-    public List<Location> addNewLocation(User user, Long transmitterId, List<CreateLocationRequest.Location> locations) {
-        Transmitter transmitter = transmitterService.findTransmitterById(transmitterId);
+    public Location newLocation(Long accountId, Long transmitterId, Location location) {
+        Account account = accountService.getAccountById(accountId);
+        Transmitter transmitter = transmitterService.getTransmitter(accountId, transmitterId);
+        Location newLocation = Location.builder()
+                .transmitter(transmitter)
+                .account(account)
+                .latitude(location.getLatitude())
+                .longitude(location.getLongitude())
+                .gpsTimestamp(location.getGpsTimestamp())
+                .build();
 
-        List<Location> newLocations = locations.stream()
-                .map(location -> Location.builder()
-                        .transmitter(transmitter)
-                        .user(user)
-                        .longitude(location.getLongitude())
-                        .latitude(location.getLatitude())
-                        .gpsTimestamp(location.getGpsTimestamp())
-                        .created(LocalDateTime.now())
-                        .build()
-                ).collect(Collectors.toList());
+        return locationRepository.save(newLocation);
+    }
 
-        return locationRepository.saveAll(newLocations);
+    public List<Location> getLastLocationsByAccountId(Long accountId) {
+        return locationRepository.getLastLocations(accountId);
     }
 
     /** TODO - MOVE TO UTILITY METHOD / INTERFACE

@@ -1,6 +1,6 @@
 CREATE TABLE gps_location (
   id BIGINT AUTO_INCREMENT,
-  user_id INT,
+  account_id INT,
 
   latitude DOUBLE,
   longitude DOUBLE,

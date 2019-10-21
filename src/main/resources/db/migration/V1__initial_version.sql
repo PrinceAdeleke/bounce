@@ -1,4 +1,4 @@
-CREATE TABLE "app_user"(
+CREATE TABLE "account"(
     id SERIAL PRIMARY KEY,
     created TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
@@ -13,7 +13,7 @@ CREATE TABLE "vehicle"(
 
 CREATE TABLE "transmitter"(
     id SERIAL PRIMARY KEY,
-    user_id INTEGER REFERENCES app_user(id),
+    account_id INTEGER REFERENCES account(id),
     vehicle_id INTEGER REFERENCES vehicle(id),
     created TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
@@ -23,7 +23,7 @@ CREATE TABLE "location"(
     latitude DOUBLE PRECISION,
     longitude DOUBLE PRECISION,
     transmitter_id INTEGER REFERENCES transmitter(id),
-    user_id INTEGER REFERENCES app_user(id),
+    account_id INTEGER REFERENCES account(id),
     gps_timestamp TIMESTAMP NOT NULL,
     created TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
 );

@@ -1,48 +1,49 @@
 package com.findmycar.bounce.controller;
 
-import com.findmycar.bounce.dto.CreateLocationRequest;
+import com.findmycar.bounce.controller.dto.LocationRequestDTO;
+import com.findmycar.bounce.controller.dto.LocationResponseDTO;
+import com.findmycar.bounce.controller.dto.mapper.LocationMapper;
 import com.findmycar.bounce.entity.Location;
 import com.findmycar.bounce.entity.response.APIResponse;
-import com.findmycar.bounce.exception.BadRequestException;
 import com.findmycar.bounce.service.LocationService;
-import com.findmycar.bounce.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-
-import static com.findmycar.bounce.values.APIConstants.API_BASE_URL;
+import java.util.stream.Collectors;
 
 @RestController
-@RequestMapping(API_BASE_URL + "/location")
+@RequestMapping("/api/account/{accountId}/location")
 public class LocationController {
     private final LocationService locationService;
-    private final UserService userService;
 
     @Autowired
-    public LocationController(LocationService locationService, UserService userService) {
+    public LocationController(LocationService locationService) {
         this.locationService = locationService;
-        this.userService = userService;
     }
 
     @PostMapping
-    public APIResponse addLocations(@RequestBody CreateLocationRequest request) {
-        if (request.getLocations().size() == 0) {
-            throw new BadRequestException("0 location objects sent in request");
-        }
-
-        List<Location> newLocations = locationService.addNewLocation(
-                userService.findUserById(request.getUserId()),
-                request.getTransmitterId(),
-                request.getLocations()
+    public APIResponse newLocation(@PathVariable("accountId") Long accountId,
+                                    @RequestBody LocationRequestDTO locationRequest) {
+        Location newLocation = locationService.newLocation(
+                accountId,
+                locationRequest.getTransmitterId(),
+                LocationMapper.toLocation(locationRequest)
         );
 
-        return new APIResponse(String.format("Successfully saved %s locations", newLocations.size()), HttpStatus.OK);
+        LocationResponseDTO locationResponse = LocationMapper.toLocationResponseDTO(newLocation);
+        return new APIResponse(locationResponse, "Successfully created new location", HttpStatus.OK);
     }
 
-    @GetMapping("/last/all")
-    public APIResponse getLastLocation() {
-        return null;
+    @GetMapping
+    public APIResponse getLastTransmitterLocations(@PathVariable("accountId") Long accountId) {
+        List<Location> locations = locationService.getLastLocationsByAccountId(accountId);
+
+        List<LocationResponseDTO> locationResponseDTOList = locations.stream()
+                .map(LocationMapper::toLocationResponseDTO)
+                .collect(Collectors.toList());
+
+        return new APIResponse(locationResponseDTOList, HttpStatus.OK);
     }
 }

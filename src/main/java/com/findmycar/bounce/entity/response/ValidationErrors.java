@@ -8,12 +8,11 @@ import javax.validation.ConstraintViolation;
 import java.util.*;
 import java.util.stream.Collectors;
 
-public class ValidationErrors extends APIResponse {
+public class ValidationErrors {
     @Getter
     private Map<String, List<ConstraintViolationError>> errors;
 
     public ValidationErrors(Set<ConstraintViolation<?>> constraintViolations) {
-        super(null, HttpStatus.UNPROCESSABLE_ENTITY);
         errors = mapConstraintViolationsToErrors(constraintViolations);
     }
 

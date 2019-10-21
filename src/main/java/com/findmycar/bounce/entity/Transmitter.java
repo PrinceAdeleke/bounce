@@ -18,15 +18,11 @@ public class Transmitter {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-//    @OneToMany(mappedBy = "transmitter")
-//    @NotNull
-//    private List<Location> location;
-
     @ManyToOne
-    @JoinColumn(name = "user_id", referencedColumnName = "id")
+    @JoinColumn(name = "account_id", referencedColumnName = "id")
     @NotNull
     @JsonBackReference
-    private User user;
+    private Account account;
 
     @OneToOne
     @JoinColumn(name = "vehicle_id", referencedColumnName = "id")

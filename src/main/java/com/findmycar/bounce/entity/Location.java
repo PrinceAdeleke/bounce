@@ -26,13 +26,12 @@ public class Location {
     @JoinColumn(name = "transmitter_id", referencedColumnName = "id")
     private Transmitter transmitter;
 
-    @JoinColumn(name = "user_id")
+    @JoinColumn(name = "account_id")
     @OneToOne(cascade = CascadeType.ALL)
-    private User user;
+    private Account account;
 
     @NotNull
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
-    @JsonProperty("gps_timestamp")
     private LocalDateTime gpsTimestamp;
 
     @CreationTimestamp private LocalDateTime created;
