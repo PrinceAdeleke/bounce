@@ -74,8 +74,10 @@ public class TransmitterServiceTest {
 
     @Test
     public void whenFetchingTransmitterList_thenReturnTransmitterList() {
+        when(transmitterRepository.getAllByAccount(any()))
+                .thenReturn(transmitters);
+
         List<Transmitter> expectedTransmitters = transmitterService.getTransmittersForAccount(9L);
-        System.out.println(expectedTransmitters.size());
         assertThat(expectedTransmitters.size()).isEqualTo(transmitters.size());
     }
 
