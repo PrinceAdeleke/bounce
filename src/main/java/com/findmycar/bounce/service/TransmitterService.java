@@ -3,7 +3,7 @@ package com.findmycar.bounce.service;
 import com.findmycar.bounce.entity.Account;
 import com.findmycar.bounce.entity.Transmitter;
 import com.findmycar.bounce.entity.Vehicle;
-import com.findmycar.bounce.exception.MaxTransmittersForUserExceeded;
+import com.findmycar.bounce.exception.MaxTransmittersForAccountExceeded;
 import com.findmycar.bounce.repository.TransmitterRepository;
 import com.findmycar.bounce.repository.VehicleRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -65,7 +65,7 @@ public class TransmitterService {
         List<Transmitter> transmitters = transmitterRepository.getAllByAccount(account);
 
         if (transmitters.size() == MAX_TRANSMITTERS_ALLOWED) {
-            throw new MaxTransmittersForUserExceeded(String.format(
+            throw new MaxTransmittersForAccountExceeded(String.format(
                     "Cannot create a new transmitter. Transmitter limit (%s) exceeded",
                     MAX_TRANSMITTERS_ALLOWED
             ));
