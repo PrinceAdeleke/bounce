@@ -5,12 +5,13 @@ import lombok.Builder;
 import lombok.Data;
 
 import java.time.LocalDateTime;
+import java.util.UUID;
 
 @Data
 @Builder
 public class LocationResponseDTO {
-    private Long accountId;
-    private Long transmitterId;
+    private UUID accountId;
+    private UUID transmitterId;
     private Double latitude;
     private Double longitude;
 

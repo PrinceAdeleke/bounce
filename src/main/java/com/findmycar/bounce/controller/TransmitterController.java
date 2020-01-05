@@ -12,6 +12,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 @RestController
@@ -26,7 +27,7 @@ public class TransmitterController {
 
     @PostMapping
     public APIResponse createTransmitter(@RequestBody TransmitterRequestDTO transmitterRequest,
-                                         @PathVariable("accountId") Long accountId) {
+                                         @PathVariable("accountId") UUID accountId) {
         Transmitter transmitter = TransmitterMapper.toTransmitterFromTransmitterRequestDTO();
         Vehicle vehicle = TransmitterMapper.toVehicleFromTransmitterRequestDTO(transmitterRequest);
         Transmitter newTransmitter = transmitterService.createTransmitter(accountId, transmitter, vehicle);
@@ -35,7 +36,7 @@ public class TransmitterController {
     }
 
     @GetMapping
-    public APIResponse getAllTransmitters(@PathVariable("accountId") Long accountId) {
+    public APIResponse getAllTransmitters(@PathVariable("accountId") UUID accountId) {
         List<TransmitterDetailsDTO> transmitterDetailsDTOList =
                 transmitterService.getTransmittersForAccount(accountId).stream()
                         .map(TransmitterMapper::toTransmitterDTO)
@@ -44,8 +45,8 @@ public class TransmitterController {
     }
 
     @GetMapping("/{transmitterId}")
-    public APIResponse getTransmitter(@PathVariable("accountId") Long accountId,
-                                      @PathVariable("transmitterId") Long transmitterId) {
+    public APIResponse getTransmitter(@PathVariable("accountId") UUID accountId,
+                                      @PathVariable("transmitterId") UUID transmitterId) {
         Transmitter transmitter = transmitterService.getTransmitter(accountId, transmitterId);
         TransmitterDetailsDTO transmitterDetailsDTO = TransmitterMapper.toTransmitterDTO(transmitter);
         return new APIResponse(transmitterDetailsDTO, HttpStatus.OK);

@@ -11,6 +11,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 @RestController
@@ -24,7 +25,7 @@ public class LocationController {
     }
 
     @PostMapping
-    public APIResponse newLocation(@PathVariable("accountId") Long accountId,
+    public APIResponse newLocation(@PathVariable("accountId") UUID accountId,
                                     @RequestBody LocationRequestDTO locationRequest) {
         Location newLocation = locationService.newLocation(
                 accountId,

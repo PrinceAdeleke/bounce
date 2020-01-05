@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 
 import javax.persistence.EntityNotFoundException;
 import java.util.List;
+import java.util.UUID;
 
 import static com.findmycar.bounce.values.APIConstants.MAX_TRANSMITTERS_ALLOWED;
 
@@ -35,7 +36,7 @@ public class TransmitterService {
      * @param transmitterId of transmitter
      * @return transmitter
      */
-    public Transmitter getTransmitter(Long accountId, Long transmitterId) {
+    public Transmitter getTransmitter(UUID accountId, UUID transmitterId) {
         Account account = accountService.getAccountById(accountId);
         return transmitterRepository.getByAccountAndId(account, transmitterId)
                 .orElseThrow(() -> new EntityNotFoundException(String.format(
@@ -48,7 +49,7 @@ public class TransmitterService {
      * @param accountId of the user
      * @return transmitters belonging to a user
      */
-    public List<Transmitter> getTransmittersForAccount(Long accountId) {
+    public List<Transmitter> getTransmittersForAccount(UUID accountId) {
         Account account = accountService.getAccountById(accountId);
         return transmitterRepository.getAllByAccount(account);
     }
@@ -60,7 +61,7 @@ public class TransmitterService {
      * @param vehicle details
      * @return new transmitter
      */
-    public Transmitter createTransmitter(Long accountId, Transmitter transmitter, Vehicle vehicle) {
+    public Transmitter createTransmitter(UUID accountId, Transmitter transmitter, Vehicle vehicle) {
         Account account = accountService.getAccountById(accountId);
         List<Transmitter> transmitters = transmitterRepository.getAllByAccount(account);
 

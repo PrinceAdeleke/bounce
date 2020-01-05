@@ -11,6 +11,7 @@ import org.mockito.junit.MockitoJUnitRunner;
 import javax.persistence.EntityNotFoundException;
 
 import java.util.Optional;
+import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.when;
@@ -26,15 +27,16 @@ public class AccountServiceTest {
 
     @Test(expected = EntityNotFoundException.class)
     public void whenFetchingNonExistentAccount_thenThrowEntityNotFoundException() {
-        accountService.getAccountById(2L);
+        accountService.getAccountById(UUID.randomUUID());
     }
 
     @Test
     public void whenFetchingAccount_thenReturnAccount() {
-        Account expectedAccount = Account.builder().id(2L).build();
+        UUID accountId = UUID.randomUUID();
+        Account expectedAccount = Account.builder().id(accountId).build();
         Optional<Account> optionalAccount = Optional.of(expectedAccount);
 
-        when(accountRepository.findById(2L)).thenReturn(optionalAccount);
-        assertThat(accountService.getAccountById(2L).getId()).isEqualTo(optionalAccount.get().getId());
+        when(accountRepository.findById(accountId)).thenReturn(optionalAccount);
+        assertThat(accountService.getAccountById(accountId).getId()).isEqualTo(optionalAccount.get().getId());
     }
 }

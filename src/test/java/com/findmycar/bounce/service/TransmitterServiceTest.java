@@ -8,7 +8,6 @@ import com.findmycar.bounce.repository.TransmitterRepository;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
@@ -16,13 +15,13 @@ import org.mockito.junit.MockitoJUnitRunner;
 import javax.persistence.EntityNotFoundException;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 import java.util.stream.Collectors;
 import java.util.stream.LongStream;
 
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyLong;
-import static org.mockito.Mockito.when;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
 public class TransmitterServiceTest {
@@ -42,10 +41,10 @@ public class TransmitterServiceTest {
     public void setup() {
         transmitters = LongStream
                 .range(0, 3)
-                .mapToObj(this::createTransmitterWithId)
+                .mapToObj(x -> createTransmitterWithId(UUID.randomUUID()))
                 .collect(Collectors.toList());
 
-        when(accountService.getAccountById(anyLong()))
+        when(accountService.getAccountById(any()))
                 .thenReturn(new Account());
     }
 
@@ -54,22 +53,23 @@ public class TransmitterServiceTest {
         when(transmitterRepository.getAllByAccount(any(Account.class)))
                 .thenReturn(transmitters);
 
-        transmitterService.createTransmitter(anyLong(), createTransmitterWithId(2L), new Vehicle());
+        transmitterService.createTransmitter(any(), createTransmitterWithId(UUID.randomUUID()), new Vehicle());
     }
 
     @Test(expected = EntityNotFoundException.class)
     public void whenFetchingANonExistentTransmitter_thenThrowEntityNotFoundException() {
         // No need to mock non existent object
-        assertThat(transmitterService.getTransmitter(anyLong(), 2L).getId()).isEqualTo(2L);
+        assertThat(transmitterService.getTransmitter(any(), UUID.randomUUID()).getId()).isEqualTo(UUID.randomUUID());
     }
 
     @Test
     public void whenFetchingTransmitter_thenReturnTransmitter() {
-        Transmitter expectedTransmitter = createTransmitterWithId(2L);
-        when(transmitterRepository.getByAccountAndId(any(Account.class), anyLong()))
+        UUID transmitterId = UUID.randomUUID();
+        Transmitter expectedTransmitter = createTransmitterWithId(transmitterId);
+        when(transmitterRepository.getByAccountAndId(any(Account.class), any()))
                 .thenReturn(Optional.of(expectedTransmitter));
 
-        assertThat(transmitterService.getTransmitter(anyLong(), 2L).getId()).isEqualTo(2L);
+        assertThat(transmitterService.getTransmitter(any(), transmitterId).getId()).isEqualTo(transmitterId);
     }
 
     @Test
@@ -77,11 +77,11 @@ public class TransmitterServiceTest {
         when(transmitterRepository.getAllByAccount(any()))
                 .thenReturn(transmitters);
 
-        List<Transmitter> expectedTransmitters = transmitterService.getTransmittersForAccount(9L);
+        List<Transmitter> expectedTransmitters = transmitterService.getTransmittersForAccount(UUID.randomUUID());
         assertThat(expectedTransmitters.size()).isEqualTo(transmitters.size());
     }
 
-    private Transmitter createTransmitterWithId(Long id) {
+    private Transmitter createTransmitterWithId(UUID id) {
         return Transmitter
                 .builder()
                 .id(id)

@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.UUID;
 
 @Service
 public class LocationService {
@@ -31,7 +32,7 @@ public class LocationService {
      * @param location object
      * @return new gps location
      */
-    public Location newLocation(Long accountId, Long transmitterId, Location location) {
+    public Location newLocation(UUID accountId, UUID transmitterId, Location location) {
         Account account = accountService.getAccountById(accountId);
         Transmitter transmitter = transmitterService.getTransmitter(accountId, transmitterId);
         Location newLocation = Location.builder()

@@ -7,9 +7,10 @@ import org.springframework.stereotype.Repository;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 @Repository
-public interface TransmitterRepository extends JpaRepository<Transmitter, Long> {
+public interface TransmitterRepository extends JpaRepository<Transmitter, UUID> {
     List<Transmitter> getAllByAccount(Account account);
-    Optional<Transmitter> getByAccountAndId(Account account, Long transmitterId);
+    Optional<Transmitter> getByAccountAndId(Account account, UUID transmitterId);
 }

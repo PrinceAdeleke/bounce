@@ -5,6 +5,7 @@ import com.findmycar.bounce.repository.AccountRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import javax.persistence.EntityNotFoundException;
+import java.util.UUID;
 
 @Service
 public class AccountService {
@@ -21,7 +22,7 @@ public class AccountService {
      * @return User object
      * @throws EntityNotFoundException if a user has not been found
      */
-    public Account getAccountById(Long id) {
+    public Account getAccountById(UUID id) {
         return accountRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException(
                         String.format("Cannot find user with id %s", id)
