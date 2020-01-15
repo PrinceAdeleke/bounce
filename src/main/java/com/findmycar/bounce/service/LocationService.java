@@ -46,8 +46,9 @@ public class LocationService {
         return locationRepository.save(newLocation);
     }
 
-    public List<Location> getLastLocationsByAccountId(Long accountId) {
-        return locationRepository.getLastLocations(accountId);
+    public List<Location> getLastLocationsByAccountId(UUID accountId) {
+        Account account = accountService.getAccountById(accountId);
+        return locationRepository.getLastLocationsByAccount(account);
     }
 
     /** TODO - MOVE TO UTILITY METHOD / INTERFACE

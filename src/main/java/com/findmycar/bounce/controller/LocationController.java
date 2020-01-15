@@ -25,20 +25,18 @@ public class LocationController {
     }
 
     @PostMapping
-    public APIResponse newLocation(@PathVariable("accountId") UUID accountId,
-                                    @RequestBody LocationRequestDTO locationRequest) {
-        Location newLocation = locationService.newLocation(
+    @ResponseStatus(HttpStatus.CREATED)
+    public void newLocation(@PathVariable("accountId") UUID accountId,
+                            @RequestBody LocationRequestDTO locationRequest) {
+        locationService.newLocation(
                 accountId,
                 locationRequest.getTransmitterId(),
                 LocationMapper.toLocation(locationRequest)
         );
-
-        LocationResponseDTO locationResponse = LocationMapper.toLocationResponseDTO(newLocation);
-        return new APIResponse(locationResponse, "Successfully created new location", HttpStatus.OK);
     }
 
     @GetMapping
-    public APIResponse getLastTransmitterLocations(@PathVariable("accountId") Long accountId) {
+    public APIResponse getLastTransmitterLocations(@PathVariable("accountId") UUID accountId) {
         List<Location> locations = locationService.getLastLocationsByAccountId(accountId);
 
         List<LocationResponseDTO> locationResponseDTOList = locations.stream()

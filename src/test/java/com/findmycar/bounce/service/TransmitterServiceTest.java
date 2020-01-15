@@ -5,6 +5,7 @@ import com.findmycar.bounce.entity.Transmitter;
 import com.findmycar.bounce.entity.Vehicle;
 import com.findmycar.bounce.exception.MaxTransmittersForAccountExceeded;
 import com.findmycar.bounce.repository.TransmitterRepository;
+import com.findmycar.bounce.repository.VehicleRepository;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -31,6 +32,9 @@ public class TransmitterServiceTest {
 
     @Mock
     private TransmitterRepository transmitterRepository;
+
+    @Mock
+    private VehicleRepository vehicleRepository;
 
     @InjectMocks
     private TransmitterService transmitterService;
@@ -63,7 +67,7 @@ public class TransmitterServiceTest {
     }
 
     @Test
-    public void whenFetchingTransmitter_thenReturnTransmitter() {
+    public void whenFetchingTransmitter_thenReturnTransmitterFromDB() {
         UUID transmitterId = UUID.randomUUID();
         Transmitter expectedTransmitter = createTransmitterWithId(transmitterId);
         when(transmitterRepository.getByAccountAndId(any(Account.class), any()))
@@ -73,12 +77,32 @@ public class TransmitterServiceTest {
     }
 
     @Test
-    public void whenFetchingTransmitterList_thenReturnTransmitterList() {
+    public void whenFetchingTransmitterList_thenReturnTransmittersFromDB() {
         when(transmitterRepository.getAllByAccount(any()))
                 .thenReturn(transmitters);
 
         List<Transmitter> expectedTransmitters = transmitterService.getTransmittersForAccount(UUID.randomUUID());
         assertThat(expectedTransmitters.size()).isEqualTo(transmitters.size());
+    }
+
+    @Test
+    public void whenCreatingTransmitter_returnTransmitterFromDB() {
+        Vehicle vehicle = Vehicle.builder().id(UUID.randomUUID()).build();
+        Transmitter transmitter = createTransmitterWithId(UUID.randomUUID());
+
+        when(vehicleRepository.save(any()))
+                .thenReturn(vehicle);
+
+        when(transmitterRepository.save(any()))
+                .thenReturn(transmitter);
+
+        Transmitter newTransmitter = transmitterService.createTransmitter(
+                UUID.randomUUID(),
+                createTransmitterWithId(transmitter.getId()),
+                vehicle
+        );
+
+        assertThat(newTransmitter.getId()).isEqualTo(transmitter.getId());
     }
 
     private Transmitter createTransmitterWithId(UUID id) {

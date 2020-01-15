@@ -9,7 +9,6 @@ import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 
 import javax.persistence.EntityNotFoundException;
-
 import java.util.Optional;
 import java.util.UUID;
 
@@ -31,7 +30,7 @@ public class AccountServiceTest {
     }
 
     @Test
-    public void whenFetchingAccount_thenReturnAccount() {
+    public void whenFetchingAccount_thenReturnAccountFromDB() {
         UUID accountId = UUID.randomUUID();
         Account expectedAccount = Account.builder().id(accountId).build();
         Optional<Account> optionalAccount = Optional.of(expectedAccount);

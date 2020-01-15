@@ -1,12 +1,12 @@
 package com.findmycar.bounce.controller.dto;
 
 import lombok.Builder;
-import lombok.Data;
+import lombok.Value;
 
 import java.util.UUID;
 
+@Value
 @Builder
-@Data
 public class TransmitterDetailsDTO {
     private UUID transmitterId;
     private UUID vehicleId;
