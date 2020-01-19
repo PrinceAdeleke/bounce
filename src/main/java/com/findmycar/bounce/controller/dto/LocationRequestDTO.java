@@ -1,7 +1,8 @@
 package com.findmycar.bounce.controller.dto;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
+import org.springframework.format.annotation.DateTimeFormat;
+
 import java.time.LocalDateTime;
 import java.util.UUID;
 
@@ -11,6 +12,6 @@ public class LocationRequestDTO {
     private Double latitude;
     private Double longitude;
 
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
     private LocalDateTime gpsTimestamp;
 }

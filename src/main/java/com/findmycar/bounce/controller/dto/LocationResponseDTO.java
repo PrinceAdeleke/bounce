@@ -10,6 +10,7 @@ import java.util.UUID;
 @Value
 @Builder
 public class LocationResponseDTO {
+    private UUID id;
     private UUID accountId;
     private UUID transmitterId;
     private Double latitude;

@@ -15,6 +15,7 @@ public class LocationMapper {
 
     public static LocationResponseDTO toLocationResponseDTO(Location location) {
         return LocationResponseDTO.builder()
+                .id(location.getId())
                 .accountId(location.getAccount().getId())
                 .transmitterId(location.getTransmitter().getId())
                 .gpsTimestamp(location.getGpsTimestamp())
