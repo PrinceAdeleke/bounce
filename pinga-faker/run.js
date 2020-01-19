@@ -1,6 +1,7 @@
 const csvReader = require('./csv/csvReader');
 const csvParser = require('./csv/csvParser');
 const pinga = require('./pingFaker/pinga');
+const config = require('./config/config-dev');
 
 const run = async (config) => {
   console.log('CONFIG => ', config);
@@ -16,12 +17,6 @@ const run = async (config) => {
   console.log(`Successfully loaded ${locations.length} locations`);
   console.log('Start pinga...');
   pinga.start(config, locations);
-};
-
-const config = {
-  accountId: '00000003-0000-1000-8000-00805f9b34fb',
-  transmitterId: '398d4277-300e-4c8f-b10b-ee9c98bdfd66',
-  baseUrl: 'http://localhost:8080'
 };
 
 run(config);

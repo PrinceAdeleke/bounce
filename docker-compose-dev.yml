@@ -14,6 +14,14 @@ services:
     networks:
       - findmycar
 
+  pingafaker:
+    working_dir: /app
+    build:
+      context: ./pinga-faker
+      dockerfile: Dockerfile-dev
+    networks:
+      - findmycar
+
   postgresdb:
     image: postgres:12
     restart: on-failure

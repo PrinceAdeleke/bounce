@@ -13,7 +13,10 @@ const pinga = async (config, locations) => {
       return await pinga(config, locations);
     }, 1000);
   } else {
-    return await pinga(config, locations);
+    console.log('failed to ping location... retrying');
+    setTimeout(async () => {
+      return await pinga(config, locations);
+    }, 1000);
   }
 };
 

@@ -8,11 +8,9 @@ const ping = async ({ baseUrl, accountId, transmitterId }, { latitude, longitude
   const payload = { transmitterId, accountId, latitude, longitude, gpsTimestamp };
 
   try {
-    await axios.post(`http://localhost:8080/api/account/${accountId}/location`, payload);
+    await axios.post(`http://app:8080/api/account/${accountId}/location`, payload);
       return true;
-  } catch(error) {
-    console.log(error);
-  }
+  } catch(error) {}
 };
 
 module.exports = ping;
